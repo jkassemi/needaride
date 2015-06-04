@@ -1,0 +1,64 @@
+<div class="card-container manual-flip">
+      <div class="card"><!-- manual-flip card -->
+          <div class="front">
+              <div class="cover">
+              </div>
+              <div class="user">
+                  <img class="img-circle" src="/img/user2.png"/>
+              </div>
+              <div class="content">
+                  <div class="main">
+                      <h3 class="name">Monica Rambeau</h3>
+                      <p class="user-type">Plan 1</p>
+                      <h5><i class="fa fa-envelope-o fa-fw text-muted"></i> monica@example.com</h5>
+                      <h5><i class="fa fa-map-marker fa-fw text-muted"></i> Denver, CO, USA - 128.177.113.102</h5>
+                      <h5><i class="fa fa-clock-o fa-fw text-muted"></i> Last Seen: 05:37 GST </h5>
+                  </div>
+                  <div class="footer">
+                      <button class="btn" onclick="rotateCard(this)">
+                          <i class="fa fa-mail-forward"></i> Flip
+                      </button>
+                  </div>
+              </div>
+          </div> <!-- end front panel -->
+          <div class="back">
+              <div class="header">
+                <h3 class="name reverse">Monica Rambeau</h3>
+                <div class="text-center">
+                  <a href="mailto:example@example.com" class="email"><i class="fa fa-envelope-o"></i></a>
+                  <a href="//github.com/#" target="_blank" class="github"><i class="fa fa-github"></i></a>
+                  <a href="//twitter.com/#" target="_blank" class="twitter"><i class="fa fa-twitter"></i></a>
+                  <a href="//facebook.com/#" target="_blank" class="facebook"><i class="fa fa-facebook"></i></a>
+                  <a href="//linkedin.com/#" target="_blank" class="linkedin"><i class="fa fa-linkedin"></i></a>
+                </div>
+              </div>
+              <div class="content">
+                  <div class="main">
+                      <h4 class="text-center">Notes</h4>
+                      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis ac scelerisque libero.</p>
+                      <h4 class="text-center">Actions</h4>
+                      <button class="btn btn-sm btn-info" >Confirm</button>
+                      <button class="btn btn-sm btn-warning" >Reset</button>
+                      <button class="btn btn-sm btn-danger" >Delete</button>
+                  </div>
+              </div>
+              <div class="footer">
+                  <button class="btn" onclick="rotateCard(this)">
+                      <i class="fa fa-reply"></i> Back
+                  </button>
+              </div>
+          </div> <!-- end back panel -->
+      </div> <!-- end manual-flip card -->
+  </div> <!-- end card-container -->
+
+<script type="text/javascript">
+    function rotateCard(btn){
+        var $card = $(btn).closest('.card-container');
+        console.log($card);
+        if($card.hasClass('hover')){
+            $card.removeClass('hover');
+        } else {
+            $card.addClass('hover');
+        }
+    }
+</script>
