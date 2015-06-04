@@ -1,0 +1,187 @@
+---
+layout: page
+permalink: /dashboard/
+---
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.3/handlebars.js"></script>
+
+<script type="text/javascript">
+  bowtie.user.info(function(user){
+    if(!user){ window.location.href = "/users/sign_in"; }
+  });
+
+  function getHandlebarsTemplate(templateElementId){
+    var source = $(templateElementId).html();
+    var template = Handlebars.compile(source);
+
+    return template;
+  }
+
+  var needaride = {
+    // List rides that the current user organized
+    index: function(){
+      $.get("/ride", function(rides){
+        $("#response").html(JSON.stringify(rides));
+
+        var template = getHandlebarsTemplate("#ride-list-template");
+        $("#target").html(template(rides)).show();
+      }).fail(function(response){
+        $("#response").html(JSON.stringify(response));
+      });
+    },
+
+    // Show the details for a specific ride
+    show: function(ride_id){
+      $.get("/ride/" + ride_id, {
+
+      }, function(ride){
+        $("#response").html(JSON.stringify(ride));
+
+        var template = getHandlebarsTemplate("#ride-detail-template");
+        $("#target").html(template(rides)).show();
+      }).fail(function(response){
+        $("#response").html(JSON.stringify(response));
+      });
+    },
+
+    // Find rides that we can become a passenger of
+    search: function(start_latitude, start_longitude, stop_latitude, stop_longitude, starts_at){
+      $.get("/ride/search", {
+        start_lat: start_latitude,
+        start_lon: start_longitude,
+        stop_lat: stop_latitude,
+        stop_lon: stop_longitude,
+        starts_at: starts_at
+      }, function(rides){
+        $("#response").html(JSON.stringify(rides));
+        var template = getHandlebarsTemplate("#ride-list-template");
+        $("#target").html(template(rides)).show();
+      }).fail(function(response){
+        $("#response").html(JSON.stringify(response));
+      });
+    },
+
+    // Create a new ride object
+    create: function(start_latitude, start_longitude, stop_latitude, stop_longitude, max_passengers_count, description, starts_at){
+      $.post("/ride", {
+        start_lat: start_latitude,
+        start_lon: start_longitude,
+        stop_lat: stop_latitude,
+        stop_lon: stop_longitude,
+        max_passengers_count: max_passengers_count,
+        description: description,
+        starts_at: starts_at
+      }, function(ride){
+        $("#response").html(JSON.stringify(ride, null, 4));
+        $("#target").html("Ride created");
+      }).fail(function(response){
+        $("#response").html(JSON.stringify(response));
+      });
+    },
+
+
+    // Remove a ride that the current user organized
+    remove: function(ride_id){
+      $.ajax({
+        url: '/ride/' + ride_id,
+        type: 'DELETE',
+        success: function(response){
+          $("#response").html(JSON.stringify(response, null, 4));
+          $("#target").html("Ride removed");
+        }
+      }).fail(function(response){
+        $("#response").html(JSON.stringify(response));
+      });
+    },
+
+    // Register the current user for the specified ride
+    register: function(ride_id){
+      $.post("/passenger", { ride_id: ride_id }, function(response){
+        $("#response").html(JSON.stringify(response, null, 4));
+        $("#target").html("Added passenger");
+      }).fail(function(response){
+        $("#response").html(JSON.stringify(response));
+      });
+    }
+  }
+</script>
+
+<div style="display:none;">
+  <!-- This is where we're importing our handlebars template into the source of the page -->
+  {% include ride_list_template.html %}
+  {% include ride_detail_template.html %}
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    <div id="capabilities" role="tabpanel">
+      <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active">
+          <a href="#index" aria-controls="index" role="tab" data-toggle="tab">Index</a>
+        </li>
+
+        <li role="presentation">
+          <a href="#show" aria-controls="show" role="tab" data-toggle="tab">Details</a>
+        </li>
+
+        <li role="presentation">
+          <a href="#create" aria-controls="create" role="tab" data-toggle="tab">Create</a>
+        </li>
+
+        <li role="presentation">
+          <a href="#remove" aria-controls="remove" role="tab" data-toggle="tab">Remove</a>
+        </li>
+
+        <li role="presentation">
+          <a href="#register-passenger" aria-controls="register-passenger" role="tab" data-toggle="tab">Register Passenger</a>
+        </li>
+      </ul>
+
+      <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="index">
+          <button onClick="needaride.index();">Get My Rides</button>
+        </div>
+
+        <div role="tabpanel" class="tab-pane" id="show">
+          <input type="text" id="ride-id-for-details" placeholder="ride id" />
+          <button onClick="needaride.show($('#ride-id-for-details').val());">Show Ride Details</button>
+        </div>
+
+        <div role="tabpanel" class="tab-pane" id="create">
+          <input type="text" id="start_lat" placeholder="Start latitude" />
+          <input type="text" id="start_lon" placeholder="Start longitude" />
+          <input type="text" id="stop_lat" placeholder="Stop latitude" />
+          <input type="text" id="stop_lon" placeholder="Stop longitude" />
+          <input type="text" id="description" placeholder="Description" />
+          <input type="text" id="starts_at" placeholder="Start at" />
+          <input type="text" id="max_passengers_count" placeholder="Maximum passenger count" />
+
+          <button onClick="needaride.create($('#start_lat').val(), $('#start_lon').val(), $('#stop_lat').val(), $('#stop_lon').val(), $('#max_passengers_count').val(), $('#description').val(), $('#starts_at').val());">Create Ride</button>
+        </div>
+
+        <div role="tabpanel" class="tab-pane" id="remove">
+          <input type="text" id="ride-id-for-removal" placeholder="ride id" />
+          <button onClick="needaride.remove($('#ride-id-for-removal').val());">Remove Ride</button>
+        </div>
+
+        <div role="tabpanel" class="tab-pane" id="register-passenger">
+          <input type="text" id="ride-id-for-passenger" placeholder="ride id" />
+          <button onClick="needaride.register($('#ride-id-for-passenger').val());">Register as Passenger</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <h2>Response</h2>
+    <div>
+      <pre id="response"></pre>
+    </div>
+
+    <h2>Template</h2>
+
+    <div id="target">
+      <!-- this is where we're rendering the templates after the example calls -->
+    </div>
+  </div>
+</div>

@@ -1,0 +1,17 @@
+<script type="text/x-handlebars-template" id="ride-detail-template">
+  <ul>
+  {{#each rides}}
+    <li>
+      <div>Ride ID: {{ id }}</div>
+      <div>Owner ID: {{ user_id }}</div>
+      <div>Start: {{ start_lat }} / {{ start_lon }}</div>
+      <div>Stop: {{ stop_lat }} / {{ stop_lon }}</div>
+      <div>Starts At: {{ starts_at }}</div>
+      <div>Max Passengers: {{ max_passengers_count }}</div>
+      <div>Description: {{ description }}</div>
+    </li>
+  {{else}}
+    <li>There are no rides here.</li>
+  {{/each}}
+  </ul>
+</script>
