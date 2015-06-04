@@ -1,20 +1,19 @@
+{% raw %}
 <script type="text/x-handlebars-template" id="ride-list-template">
+  <ul>
   {{#each rides}}
-    <div class="user-list list-group text-left">
-      <a href="#" class="list-group-item ">
-        <img class="img-circle img" src="/img/user1.png">
-        <span>Tony Stark</span>
-
-        <span class="rating">
-          <i class="fa fa-star"></i>
-          <i class="fa fa-star"></i>
-          <i class="fa fa-star-half-o"></i>
-          <i class="fa fa-star-o"></i>
-          <i class="fa fa-star-o"></i>
-        </span>
-      </a>
-    </div>
+    <li>
+      <div>Ride ID: {{ ride_id }}</div>
+      <div>Owner ID: {{ user_id }}</div>
+      <div>Start: {{ start.latitude }} / {{ start.longitude }}</div>
+      <div>Stop: {{ stop.latitude }} / {{ stop.longitude }}</div>
+      <div>Starts At: {{ starts_at }}</div>
+      <div>Max Passengers: {{ max_passengers_count }}</div>
+      <div>Description: {{ description }}</div>
+    </li>
   {{else}}
-    There are no rides yet. Try creating one!
+    <li>There are no rides here.</li>
   {{/each}}
+  </ul>
 </script>
+{% endraw %}
